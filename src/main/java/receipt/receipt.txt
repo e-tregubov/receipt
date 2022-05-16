@@ -1,0 +1,24 @@
+                                             
+                CASH RECEIPT
+              SuperMarket-JAVA
+         12, MILKY WAY Galaxy/Earth
+              Tel: 123-456-7890
+                                             
+CASHIER: #0001               DATE: 2022-05-16
+                               TIME: 01:49:55
+---------------------------------------------
+QTY DESCRIPTION                PRICE    TOTAL
+                                             
+3   Noluisse adversarium      $87,26  $261,78
+9   Debet ei assueverit       $14,33  $128,97
+     *13% discounted*                 $112,21
+33  Aptent felis petentium    $17,01  $561,33
+     *42% discounted*                 $325,58
+15  Maiestatis nisi dico      $16,77  $251,55
+11  Qui                       $60,12  $661,32
+     *19% discounted*                 $535,67
+---------------------------------------------
+Amount                               $1486,79
+Card discount: 33%                    $169,40
+TOTAL                                $1317,39
+                                             
