@@ -1,6 +1,7 @@
 Console app implements the functionality of a store receipt
 
 - run: java CheckRunner <options>
+- single argument help shows using examples
 - arguments format: ID-QTY (product identifier - product quantity)
 - additional arguments: pl-filename, dc-filename cn-number (product list, discount card list, discount card number)
 - run example: java CheckRunner pl-pl.csv dc-dc.csv 3-15 16-8 34-1 cn-1025
@@ -40,6 +41,7 @@ Additionally:
 Консольное приложение реализующее функционал формирования магазинного чека:
 
 - запуск: java CheckRunner <параметры>
+- единственный параметр help выводит примеры использования
 - формат цифровых параметров: ID-Quantity, где ID идентификатор товара, а Quantity его количество
 - дополнительные параметры: pl-имя файла списка товаров, dc-имя файла списка скидкарт, cn-номер скидкарты
 - пример запуска: java CheckRunner pl-pl.csv dc-dc.csv cn-1025 3-15 16-8 34-1

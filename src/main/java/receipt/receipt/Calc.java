@@ -22,10 +22,10 @@ public class Calc {
     public Calc(ArgsData argsData, ProductList productList, CardList cardList) {
 
         if (++receiptNumber > 9999) receiptNumber = 1; // номер чека каждый раз следующий
-        discountCardValue = cardList.getValue(argsData.getCardNumber());
+        discountCardValue = cardList.getValue(argsData.argsObj.cardNumber);
 
         // перебор аргументов позиций
-        for (Map.Entry<Integer, Integer> entry : argsData.getProducts().entrySet()) {
+        for (Map.Entry<Integer, Integer> entry : argsData.argsObj.products.entrySet()) {
 
             Product productData = productList.getProductByID(entry.getKey());
             int qty = entry.getValue();

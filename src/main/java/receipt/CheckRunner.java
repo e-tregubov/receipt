@@ -10,15 +10,15 @@ public class CheckRunner {
 
     public static void main(String[] args) throws IOException {
 
-        ArgsData argsData = new ArgsParser(args);
+        ArgsData argsData = new ArgsData(args);
 
-        String pFile = argsData.getProductsFileName();
+        String pFile = argsData.argsObj.productsFile;
         ProductList productList = (pFile == null) ? new ProductGenerator() : new ProductReader(pFile);
 
-        String cFile = argsData.getCardsFileName();
+        String cFile = argsData.argsObj.cardsFile;
         CardList cardList = (cFile == null) ? new CardGenerator() : new CardReader(cFile);
 
-        argsData.check(productList, cardList); // проверка существования товара и скидкарты в БД
+        argsData.check(productList, cardList); // проверка позиций и карты на существование
 
         Form form = new FormCalc(new Calc(argsData, productList, cardList));
 
