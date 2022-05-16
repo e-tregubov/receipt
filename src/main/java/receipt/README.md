@@ -1,4 +1,4 @@
-Console application implements the functionality of generating a store receipt:
+Console app implements the functionality of a store receipt
 
 - run: java CheckRunner <options>
 - arguments format: ID-QTY (product identifier - product quantity)

@@ -68,13 +68,13 @@ public class ArgsParser implements ArgsData {
     private void help() {
         final String MainClassName = "CheckRunner";
         System.out.printf(
-                "%nUsage: java %s [%s-filename (product list)] [%s-filename (discount card list)] " +
-                        "productID-quantity productID-quantity.. [%s-number (discount card)]%n" +
-                        "Example1: java %s 3-5 48-72%n" +
-                        "Example2: java %s %s-pl.csv %s-dc.csv 1-10 24-15 %s-1020%n",
+                "%nUsage: java %s %s-filename %s-filename " +
+                        "id1-quantity id2-quantity.. idN-quantity %s-number %n" +
+                        "Example1: java %s %s-pl.csv %s-dc.csv 1-10 24-15 %s-1020%n" +
+                        "Example2: java %s 3-5 48-12 11-7%n",
                 MainClassName, PRODUCTS, CARDS, CARD,
-                MainClassName,
-                MainClassName, PRODUCTS, CARDS, CARD
+                MainClassName, PRODUCTS, CARDS, CARD,
+                MainClassName
         );
         System.exit(0);
     }
