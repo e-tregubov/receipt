@@ -31,10 +31,11 @@ Check calculation implements:
 
 Additionally:
 
-- test files generation of product lists and discount cards
+- test files generation + saving of product lists and discount cards
 - check for the existence of arguments files specified
 - checking product's and discount card existence
 - full check of arguments for correctness and repetitions
+- main methods and calculation's test coverage
 
 -------------------------------------------------------------------------------------------------------------------
 
@@ -71,7 +72,8 @@ Additionally:
 
 Дополнительно:
 
-- генерирование тестовых файлов списков товаров и скидкарт
+- генерирование и сохранение тестовых файлов списков товаров и скидкарт
 - проверка существования файлов указанных в параметрах
 - проверка существования товара и скидкарты
 - полная проверка параметров на корректность и повторы
+- покрытие тестами калькуляции и ключевых методов

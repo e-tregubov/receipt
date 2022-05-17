@@ -4,20 +4,20 @@
          12, MILKY WAY Galaxy/Earth
               Tel: 123-456-7890
                                              
-CASHIER: #0001               DATE: 2022-05-17
-                               TIME: 15:17:24
+CASHIER: #0001               DATE: 2022-05-18
+                               TIME: 01:31:42
 ---------------------------------------------
 QTY DESCRIPTION                PRICE    TOTAL
                                              
-2   Habemus nostrum            $8,78   $17,56
-7   Delicata                  $14,24   $99,68
-11  Maiestatis efficitur       $9,87  $108,57
-     *10% discounted*                  $97,72
-25  Eget                      $25,82  $645,50
-     *23% discounted*                 $497,04
-1   Semper nobis              $15,40   $15,40
+2   Lectus dicta placerat     $70,24  $140,48
+7   Comprehensam repudiandae  $86,62  $606,34
+11  Lectus tale nunc          $78,83  $867,13
+     *18% discounted*                 $711,05
+25  Gravida                   $89,21 $2230,25
+     *22% discounted*                $1739,60
+3   Pertinacia                $58,07  $174,21
 ---------------------------------------------
-Amount                                $727,40
+Amount                               $3371,68
 Card discount: 0%                       $0,00
-TOTAL                                 $727,40
+TOTAL                                $3371,68
                                              
