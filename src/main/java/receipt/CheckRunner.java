@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class CheckRunner {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
 
         ArgsData argsData = new ArgsData(args);
 

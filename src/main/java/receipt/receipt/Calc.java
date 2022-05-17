@@ -11,13 +11,13 @@ import java.util.Map;
 
 public class Calc {
 
-    final ArrayList<Position> positionList = new ArrayList<>();
-    static int receiptNumber;
-    long amount; // общая сумма позиций без скидок
-    long amountPromo; // общая сумма акционных позиций
-    final int discountCardValue; // % скидкарты
-    final int discountTotal; // общая сумма скидки по карте
-    final long total; // общая сумма чека
+    public final ArrayList<Position> positionList = new ArrayList<>();
+    public static int receiptNumber;
+    public long amount; // общая сумма позиций без скидок
+    public long amountPromo; // общая сумма акционных позиций
+    public final int discountCardValue; // % скидкарты
+    public final long discountTotal; // общая сумма скидки по карте
+    public final long total; // общая сумма чека
 
     public Calc(ArgsData argsData, ProductList productList, CardList cardList) {
 
@@ -31,19 +31,27 @@ public class Calc {
             int qty = entry.getValue();
             long total = (long) productData.price * qty;
 
-            Position position = new Position(productData.description, productData.price, qty, productData.promoValue);
+            Position position = new Position(
+                    productData.description,
+                    productData.price,
+                    qty,
+                    productData.promoValue,
+                    productData.promoQty);
+
             positionList.add(position);
 
             // акция активна?
             if (productData.promoValue > 0 && qty > productData.promoQty) {
-                position.promoTotal = (long) Math.ceil((double) productData.price * qty * (100 - productData.promoValue) / 100);
+                position.promoTotal = (long) Math.ceil((double) total * (100 - productData.promoValue) / 100);
 
                 amountPromo += position.promoTotal; // накапливаем все скид.позиции
                 amount += position.promoTotal; // накапливаем все позиции
-            } else amount += total;
+            }
+            else amount += total;
+
         }
 
-        discountTotal = (int) Math.ceil((double) (amount - amountPromo) * discountCardValue / 100);
+        discountTotal = (long) Math.ceil((double) (amount - amountPromo) * discountCardValue / 100);
         total = amount - discountTotal;
     }
 }

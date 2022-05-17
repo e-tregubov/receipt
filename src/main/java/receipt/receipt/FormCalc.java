@@ -69,7 +69,7 @@ public class FormCalc implements Form {
     }
 
     // возвращает строки итогов
-    private String[] results(long amount, long total, int discountCardValue, int discountTotal) {
+    private String[] results(long amount, long total, int discountCardValue, long discountTotal) {
         return new String[]{
                 DASH_LINE,
                 "Amount" + " ".repeat(WIDTH - format(amount).length() - 6) + format(amount),

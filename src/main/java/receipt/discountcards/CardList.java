@@ -8,9 +8,9 @@ import java.util.StringJoiner;
 
 public class CardList {
 
-    final String FILE_NAME = "dc.csv"; // имя файла для чтения/сохранения
+    public static final String FILE_NAME = "dc.csv"; // имя файла для чтения/сохранения
 
-    final Map<String, Integer> list = new LinkedHashMap<>(); // хэшмап скидочных карт №:%
+    public final Map<String, Integer> list = new LinkedHashMap<>(); // хэшмап скидочных карт №:%
 
     public boolean contains(String cardNumber) {
         return list.containsKey(cardNumber);
