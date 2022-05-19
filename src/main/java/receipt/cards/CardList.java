@@ -1,4 +1,4 @@
-package receipt.discountcards;
+package receipt.cards;
 
 import java.io.FileWriter;
 import java.io.IOException;

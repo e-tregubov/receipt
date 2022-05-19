@@ -1,25 +1,23 @@
-package receipt.calculation;
+package receipt;
 
 import org.junit.jupiter.api.RepeatedTest;
-import receipt.arguments.ArgsData;
-import receipt.discountcards.CardGenerator;
-import receipt.discountcards.CardList;
-import receipt.discountcards.CardReader;
-import receipt.products.ProductGenerator;
+import receipt.args.ArgsObj;
+import receipt.args.Data;
+import receipt.cards.CardList;
+import receipt.cards.CardReader;
 import receipt.products.ProductList;
 import receipt.products.ProductReader;
 import receipt.receipt.Calc;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CalcTest {
-//    ProductList productList = new ProductGenerator();
-    ProductList productList = new ProductReader(ProductList.FILE_NAME);
-//    CardList cardList = new CardGenerator();
-    CardList cardList = new CardReader(CardList.FILE_NAME);
+
+    ProductList productList = new ProductReader(ProductList.FILE_NAME); // new ProductGenerator();
+    CardList cardList = new CardReader(CardList.FILE_NAME); // new CardGenerator();
     long amount = 0, amountPromo = 0;
 
     @RepeatedTest(3)
-    void TestCalc() throws Exception {
+    void CalcTest_5_Positions() throws Exception {
 
         int id1 = getNum(1,20), qty1 = getNum(1,5),
             id2 = getNum(21,40), qty2 = getNum(3,10),
@@ -27,18 +25,15 @@ public class CalcTest {
             id4 = getNum(61,80), qty4 = getNum(10,24),
             id5 = getNum(81,100), qty5 = getNum(15,45);
 
-        ArgsData argsData = new ArgsData(new String[] {
-//                ArgsData.productsArg + "-" + ProductList.FILE_NAME,
-//                ArgsData.cardsArg + "-" + CardList.FILE_NAME,
-                getPos(id1, qty1),
-                getPos(id2, qty2),
-                getPos(id3, qty3),
-                getPos(id4, qty4),
-                getPos(id5, qty5),
-                ArgsData.cardArg + "-" + ""+getNum(1000,1100)
-        });
+        final String[] args = {getPos(id1, qty1),
+                               getPos(id2, qty2),
+                               getPos(id3, qty3),
+                               getPos(id4, qty4),
+                               getPos(id5, qty5),
+                               Data.CARD_ARG + "-" + ""+getNum(1000,1100)};
 
-        Calc calc = new Calc(argsData, productList, cardList);
+        final Data data = new ArgsObj(args).data;
+        final Calc calc = new Calc(data, productList, cardList);
 
         calcPosition(id1, qty1);
         calcPosition(id2, qty2);
@@ -47,7 +42,7 @@ public class CalcTest {
         calcPosition(id5, qty5);
 
         long discountTotal = (long) Math.ceil((double) (amount - amountPromo)
-                * cardList.getValue(argsData.argsObj.cardNumber) / 100);
+                * cardList.getValue(data.cardNumber) / 100);
         long total = amount - discountTotal;
 
         assertEquals(amount, calc.amount);

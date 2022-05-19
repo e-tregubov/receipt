@@ -1,4 +1,4 @@
-package receipt.discountcards;
+package receipt.cards;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

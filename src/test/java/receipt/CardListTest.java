@@ -1,6 +1,11 @@
-package receipt.discountcards;
+package receipt;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import receipt.cards.CardGenerator;
+import receipt.cards.CardList;
+import receipt.cards.CardReader;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CardListTest {
@@ -27,6 +32,6 @@ class CardListTest {
     }
 
     @Test
-    void testSave() { assertEquals(cardList.list, new CardReader(CardList.FILE_NAME).list); }
+    void testSave() { Assertions.assertEquals(cardList.list, new CardReader(CardList.FILE_NAME).list); }
 
 }

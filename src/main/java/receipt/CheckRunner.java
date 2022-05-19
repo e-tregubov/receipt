@@ -1,27 +1,29 @@
 package receipt;
 
-import receipt.arguments.*;
-import receipt.discountcards.*;
+import receipt.args.*;
+import receipt.cards.*;
 import receipt.products.*;
 import receipt.receipt.*;
-import java.io.IOException;
 
 public class CheckRunner {
 
     public static void main(String[] args) throws Exception {
 
-        ArgsData argsData = new ArgsData(args);
+        final ArgsObj argsObj = new ArgsObj(args);
 
-        String pFile = argsData.argsObj.productsFile;
-        ProductList productList = (pFile == null) ? new ProductGenerator() : new ProductReader(pFile);
+        final String pFile = argsObj.data.productsFileName;
+        ProductList pList = (pFile == null) ? new ProductGenerator() : new ProductReader(pFile);
 
-        String cFile = argsData.argsObj.cardsFile;
-        CardList cardList = (cFile == null) ? new CardGenerator() : new CardReader(cFile);
+        final String cFile = argsObj.data.cardsFileName;
+        CardList cList = (cFile == null) ? new CardGenerator() : new CardReader(cFile);
 
-        argsData.check(productList, cardList); // проверка позиций и карты на существование
+        final String checkMsg = argsObj.data.check(pList, cList); // проверка позиций и карты на существование
+        if (checkMsg != null) {
+            System.out.println(checkMsg);
+            System.exit(0);
+        }
 
-        Form form = new FormCalc(new Calc(argsData, productList, cardList));
-
+        final Form form = new FormCalc(new Calc(argsObj.data, pList, cList));
         form.print();
         form.save();
 

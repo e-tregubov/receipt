@@ -7,14 +7,6 @@ import java.util.StringJoiner;
 
 public class Products implements ProductList {
 
-    public boolean idExists(int id) {
-        return productList.containsKey(id);
-    }
-
-    public Product getProductByID(int productID) {
-        return productList.get(productID);
-    }
-
     public void save(String fileName) {
         try (FileWriter writer = new FileWriter(fileName, false)) {
             for (Map.Entry<Integer, Product> entry : productList.entrySet()) {

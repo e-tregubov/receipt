@@ -6,13 +6,13 @@ import com.thedeanda.lorem.LoremIpsum;
 public class ProductGenerator extends Products {
 
     public ProductGenerator() {
-        int LIST_LENGTH = 100;
-        int MAX_DESCRIPTION_WORDS = 4;
-        int MAX_PRICE = 100;
-        int MIN_PROMO = 10; // минимальный % акционной скидки
-        int MAX_PROMO = 50; // максимальный
-        int MIN_QTY_PROMO = 5;
-        int MAX_QTY_PROMO = 10;
+        final int LIST_LENGTH = 100;
+        final int MAX_DESCRIPTION_WORDS = 4;
+        final int MAX_PRICE = 100;
+        final int MIN_PROMO = 10; // минимальный % акционной скидки
+        final int MAX_PROMO = 50; // максимальный
+        final int MIN_QTY_PROMO = 5;
+        final int MAX_QTY_PROMO = 10;
         Lorem lorem = LoremIpsum.getInstance();
 
         for (int id = 0; id < LIST_LENGTH; ) {
@@ -27,7 +27,7 @@ public class ProductGenerator extends Products {
             productList.put(++id, product);
         }
         System.out.println("\nProduct list has been successfully generated");
-        super.save(FILE_NAME);
+//        super.save(FILE_NAME);
     }
 
 }

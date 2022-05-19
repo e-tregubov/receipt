@@ -1,31 +1,30 @@
 package receipt.receipt;
 
-import receipt.arguments.ArgsData;
-import receipt.discountcards.CardList;
+import receipt.args.Data;
+import receipt.cards.CardList;
 import receipt.products.Position;
 import receipt.products.Product;
 import receipt.products.ProductList;
-
 import java.util.ArrayList;
 import java.util.Map;
 
 public class Calc {
 
-    public final ArrayList<Position> positionList = new ArrayList<>();
     public static int receiptNumber;
+    public final ArrayList<Position> positionList = new ArrayList<>();
     public long amount; // общая сумма позиций без скидок
     public long amountPromo; // общая сумма акционных позиций
     public final int discountCardValue; // % скидкарты
     public final long discountTotal; // общая сумма скидки по карте
     public final long total; // общая сумма чека
 
-    public Calc(ArgsData argsData, ProductList productList, CardList cardList) {
+    public Calc(Data data, ProductList productList, CardList cardList) {
 
-        if (++receiptNumber > 9999) receiptNumber = 1; // номер чека каждый раз следующий
-        discountCardValue = cardList.getValue(argsData.argsObj.cardNumber);
+        if (++receiptNumber > 9999) receiptNumber = 1; // ограничитель номера чека
+        discountCardValue = cardList.getValue(data.cardNumber);
 
-        // перебор аргументов позиций
-        for (Map.Entry<Integer, Integer> entry : argsData.argsObj.products.entrySet()) {
+        // перебор аргументов позиций и их вычисление
+        for (Map.Entry<Integer, Integer> entry : data.products.entrySet()) {
 
             Product productData = productList.getProductByID(entry.getKey());
             int qty = entry.getValue();

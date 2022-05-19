@@ -12,6 +12,14 @@ import java.util.Collections;
 
 public class FormCalc implements Form {
 
+    int WIDTH = 45;
+    int QTY_WIDTH = 3;
+    int PRICE_WIDTH = WIDTH/6;
+    int TOTAL_WIDTH = PRICE_WIDTH+3;
+    int DESC_WIDTH = WIDTH-QTY_WIDTH-PRICE_WIDTH-TOTAL_WIDTH;
+    String EMPTY_LINE = " ".repeat(WIDTH), DASH_LINE = "-".repeat(WIDTH);
+    ArrayList<String> RECEIPT_LINES = new ArrayList<>();
+
     public FormCalc(Calc calc) {
 
         // добавление строк шапки в форму с выравниванием по центру
