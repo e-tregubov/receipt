@@ -4,16 +4,16 @@ import org.junit.jupiter.api.RepeatedTest;
 import receipt.args.ArgsObj;
 import receipt.args.Data;
 import receipt.cards.CardList;
-import receipt.cards.CardReader;
 import receipt.products.ProductList;
-import receipt.products.ProductReader;
 import receipt.receipt.Calc;
+import receipt.receipt.Result;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CalcTest {
 
-    ProductList productList = new ProductReader(ProductList.FILE_NAME); // new ProductGenerator();
-    CardList cardList = new CardReader(CardList.FILE_NAME); // new CardGenerator();
+    ProductList productList = new ProductList("productList.csv");
+    CardList cardList = new CardList("cardList.csv");
     long amount = 0, amountPromo = 0;
 
     @RepeatedTest(3)
@@ -25,15 +25,15 @@ public class CalcTest {
             id4 = getNum(61,80), qty4 = getNum(10,24),
             id5 = getNum(81,100), qty5 = getNum(15,45);
 
-        final String[] args = {getPos(id1, qty1),
-                               getPos(id2, qty2),
-                               getPos(id3, qty3),
-                               getPos(id4, qty4),
-                               getPos(id5, qty5),
-                               Data.CARD_ARG + "-" + ""+getNum(1000,1100)};
+        String[] args = {getPos(id1, qty1),
+                         getPos(id2, qty2),
+                         getPos(id3, qty3),
+                         getPos(id4, qty4),
+                         getPos(id5, qty5),
+                         ArgsObj.CARD_ARG + "-" + ""+getNum(1000,1100)};
 
-        final Data data = new ArgsObj(args).data;
-        final Calc calc = new Calc(data, productList, cardList);
+        Data data = new ArgsObj(args).data;
+        final Result result = Calc.result(data, productList, cardList);
 
         calcPosition(id1, qty1);
         calcPosition(id2, qty2);
@@ -45,9 +45,9 @@ public class CalcTest {
                 * cardList.getValue(data.cardNumber) / 100);
         long total = amount - discountTotal;
 
-        assertEquals(amount, calc.amount);
-        assertEquals(discountTotal, calc.discountTotal);
-        assertEquals(total, calc.total);
+        assertEquals(amount, result.amount);
+        assertEquals(discountTotal, result.discountTotal);
+        assertEquals(total, result.total);
 
     }
 

@@ -1,33 +1,32 @@
 package receipt;
 
 import receipt.args.*;
-import receipt.cards.*;
-import receipt.products.*;
+import receipt.cards.CardList;
+import receipt.products.ProductList;
 import receipt.receipt.*;
+
 
 public class CheckRunner {
 
     public static void main(String[] args) throws Exception {
 
-        final ArgsObj argsObj = new ArgsObj(args);
+        // разбираем аргументы
+        Data data = new ArgsObj(args).data;
 
-        final String pFile = argsObj.data.productsFileName;
-        ProductList pList = (pFile == null) ? new ProductGenerator() : new ProductReader(pFile);
+        // получаем объекты данных
+        ProductList pList = new ProductList(data.productsFileName);
+        CardList cList = new CardList(data.cardsFileName);
 
-        final String cFile = argsObj.data.cardsFileName;
-        CardList cList = (cFile == null) ? new CardGenerator() : new CardReader(cFile);
+        // проверка указаний аргументов в данных
+        String checkMsg = ArgsObj.check(data, pList, cList);
+        if (checkMsg != null) { System.out.println(checkMsg); System.exit(0); }
 
-        final String checkMsg = argsObj.data.check(pList, cList); // проверка позиций и карты на существование
-        if (checkMsg != null) {
-            System.out.println(checkMsg);
-            System.exit(0);
-        }
-
-        final Form form = new FormCalc(new Calc(argsObj.data, pList, cList));
+        // формируем чек
+        Form form = new FormBuilder(Calc.result(data, pList, cList));
         form.print();
         form.save();
 
-        new Http(form);
+        new Http(form.getLines());
     }
 
 }

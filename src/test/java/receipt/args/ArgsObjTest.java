@@ -7,19 +7,17 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import receipt.cards.CardGenerator;
 import receipt.cards.CardList;
-import receipt.products.ProductGenerator;
 import receipt.products.ProductList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ArgsObjTest {
 
-    private final static String P_ARG = Data.PRODUCTS_ARG + "-",
-                                C_ARG = Data.CARDS_ARG + "-",
-                                CARD = Data.CARD_ARG + "-";
-    private final static ProductList productList = new ProductGenerator();
-    private final static CardList cardList = new CardGenerator();
+    private final static String P_ARG = ArgsObj.PRODUCTS_ARG + "-",
+                                C_ARG = ArgsObj.CARDS_ARG + "-",
+                                CARD = ArgsObj.CARD_ARG + "-";
+    private final static ProductList productList = new ProductList(null);
+    private final static CardList cardList = new CardList(null);
     private final static LoremIpsum lorem = LoremIpsum.getInstance();
 
 
@@ -27,9 +25,9 @@ class ArgsObjTest {
     @RepeatedTest(64)
     void argsParserTest_Too_Much_Arguments_Exception() {
 
-        String[] args = new String[Data.MAX_POSITIONS+getRandom(1,256)];
+        String[] args = new String[ArgsObj.MAX_POSITIONS+getRandom(1,256)];
 
-        for (int i = 0; i < Data.MAX_POSITIONS; i++) {
+        for (int i = 0; i < ArgsObj.MAX_POSITIONS; i++) {
             args[i] = getPos(getRandom(1,100),getRandom(1,100));
         }
         assertThrows(Exception.class, () -> ArgsObj.parser(args));
@@ -42,8 +40,8 @@ class ArgsObjTest {
     @EmptySource
     @ValueSource(strings = {
             "hi", "5-", "1-0", "25-2x", "2e-12",
-            "ee-11", "3-X", "--", CARD+"1020", "1-"+""+Data.MAX_QTY+1})
-    void argsParserTest_1_Wrong_Arg_Exception(String arg) {
+            "ee-11", "3-X", "--", CARD+CardList.firstGenCardNumber+1, "1-"+""+ArgsObj.MAX_QTY+1})
+    void argsParserTest_One_Invalid_Arg_Exception(String arg) {
         assertThrows(Exception.class, () -> ArgsObj.parser(new String[]{arg}));
     }
 
@@ -58,7 +56,7 @@ class ArgsObjTest {
             C_ARG + "file1.csv," + C_ARG + "file2.csv",
             CARD + "1234," + CARD + "5678",
     })
-    void argsParserTest_2_Wrong_Args_Exception(String arg1, String arg2) {
+    void argsParserTest_Two_Invalid_Args_Exception(String arg1, String arg2) {
         assertThrows(Exception.class, () -> ArgsObj.parser(new String[]{arg1, arg2}));
     }
 
@@ -74,7 +72,7 @@ class ArgsObjTest {
 
         final String fileName1 = lorem.getName(),
                      fileName2 = lorem.getName(),
-                     cardNumber = ""+getRandom(CardGenerator.FIRST_CARD_NUMBER, CardGenerator.FIRST_CARD_NUMBER+100);
+                     cardNumber = ""+getRandom(CardList.firstGenCardNumber, CardList.firstGenCardNumber + 100);
 
         final Data data = ArgsObj.parser(new String[] {
                 P_ARG+fileName1,
@@ -102,13 +100,13 @@ class ArgsObjTest {
         int id1;
         do { id1 = getRandom(1, 1000000); }
         while (productList.contains(id1));
-        int qty1 = getRandom(1,Data.MAX_QTY);
+        int qty1 = getRandom(1,ArgsObj.MAX_QTY);
         final String arg1 = getPos(id1 ,qty1);
 
         int id2;
         do { id2 = getRandom(1, 1000000); }
         while (!productList.contains(id2));
-        int qty2 = getRandom(1,Data.MAX_QTY);
+        int qty2 = getRandom(1,ArgsObj.MAX_QTY);
         final String arg2 = getPos(id2 ,qty2);
 
         int cardNum;
@@ -117,11 +115,33 @@ class ArgsObjTest {
         final String card = "" + cardNum;
 
 
-        assertEquals(Data.invalidIdMsg, ArgsObj.parser(new String[]{arg1}).check(productList, cardList));
-        assertEquals(Data.invalidCardNumberMsg, ArgsObj.parser(new String[]{arg2, CARD+""+card}).check(productList, cardList));
+        assertEquals(ArgsObj.invalidIdMsg, ArgsObj.check(ArgsObj.parser(new String[]{arg1}), productList, cardList));
+        assertEquals(ArgsObj.invalidCardNumberMsg, ArgsObj.check(ArgsObj.parser(new String[]{arg2, CARD+""+card}), productList, cardList));
 
     }
 
+    private String getRandomValidProductArgsString(int argsQty) {
+
+        StringBuilder args = new StringBuilder();
+        String arg;
+
+        for (int argsNum = 0; argsNum < argsQty; argsNum++ ) {
+            do arg = getValidArg(); while (!args.toString().contains(arg));
+            args.append(arg).append(" ");
+        }
+        return args.deleteCharAt(args.length()-1).toString();
+
+    }
+
+    private String getValidArg() {
+        return getPos(getRandom(1, ProductList.LIST_GEN_LENGTH), getRandom(1, ArgsObj.MAX_QTY));
+    }
+    private String getInvalidIdArg() {
+        return getPos(getRandom(ProductList.LIST_GEN_LENGTH+1, ProductList.LIST_GEN_LENGTH+65536), getRandom(1, ArgsObj.MAX_QTY));
+    }
+    private String getInvalidQtyArg() {
+        return getPos(getRandom(1, ProductList.LIST_GEN_LENGTH), getRandom(ArgsObj.MAX_QTY+1, ArgsObj.MAX_QTY+65536));
+    }
 
     private String getPos(int id, int qty) { return "" + id + "-" + qty; }
     private int getRandom(int min, int max) { return min + (int) (Math.random() * ((max - min) + 1)); }

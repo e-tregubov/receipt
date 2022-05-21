@@ -1,7 +1,6 @@
 package receipt.receipt;
 
 import receipt.products.Position;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -10,44 +9,42 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class FormCalc implements Form {
+public class FormBuilder implements Form {
 
-    int WIDTH = 45;
-    int QTY_WIDTH = 3;
-    int PRICE_WIDTH = WIDTH/6;
-    int TOTAL_WIDTH = PRICE_WIDTH+3;
-    int DESC_WIDTH = WIDTH-QTY_WIDTH-PRICE_WIDTH-TOTAL_WIDTH;
-    String EMPTY_LINE = " ".repeat(WIDTH), DASH_LINE = "-".repeat(WIDTH);
-    ArrayList<String> RECEIPT_LINES = new ArrayList<>();
+    ArrayList<String> lines;
 
-    public FormCalc(Calc calc) {
+    public FormBuilder(Result result) { lines = linesCalc(result); }
+
+
+    public ArrayList<String> getLines() { return lines; }
+
+    public ArrayList<String> linesCalc(Result result) {
+
+        ArrayList<String> lines = new ArrayList<>();
 
         // добавление строк шапки в форму с выравниванием по центру
-        for (String line : cap()) {
-            RECEIPT_LINES.add(" ".repeat(WIDTH / 2 - line.length() / 2) + line);
+        for (String line : capLines()) {
+            lines.add(" ".repeat(WIDTH / 2 - line.length() / 2) + line);
         }
 
         // добавление строк позиций в форму
-        for (Position position : calc.positionList) {
-            RECEIPT_LINES.add(makePositionLine(position.description, position.price, position.qty));
-            if (position.promoTotal != 0) RECEIPT_LINES.add(makePromoLine(position.promoValue, position.promoTotal));
+        for (Position position : result.positionList) {
+            lines.add(makePositionLine(position.description, position.price, position.qty));
+            if (position.promoTotal != 0) lines.add(makePromoLine(position.promoValue, position.promoTotal));
         }
+
         // добавление итогов
-        Collections.addAll(RECEIPT_LINES, results(calc.amount, calc.total, calc.discountCardValue, calc.discountTotal));
+        Collections.addAll(lines, resultLines(result.amount, result.total, result.discountCardValue, result.discountTotal));
+
+        return lines;
     }
 
-    public ArrayList<String> get() {
-        return RECEIPT_LINES;
-    }
-
-    public void print() {
-        for (String line : RECEIPT_LINES) System.out.println(line);
-    }
+    public void print() { for (String line : lines) System.out.println(line); }
 
     public void save() {
         String fileName = "receipt.txt";
         try (FileWriter writer = new FileWriter(fileName, false)) {
-            for (String line : RECEIPT_LINES) writer.write(line + "\n");
+            for (String line : lines) writer.write(line + "\n");
             writer.flush();
             System.out.printf("Receipt form saved in \"%s\" file\n", fileName);
         } catch (IOException ex) {
@@ -57,7 +54,7 @@ public class FormCalc implements Form {
     }
 
     // возвращает строки шапки
-    private String[] cap() {
+    private static String[] capLines() {
         return new String[]{
                 EMPTY_LINE,
                 "CASH RECEIPT",
@@ -65,7 +62,7 @@ public class FormCalc implements Form {
                 "12, MILKY WAY Galaxy/Earth",
                 "Tel: 123-456-7890",
                 EMPTY_LINE,
-                String.format("CASHIER: #" + "%04d" + " ".repeat(WIDTH - 30) + "DATE: %s", Calc.receiptNumber, LocalDate.now()),
+                String.format("CASHIER: #" + "%04d" + " ".repeat(WIDTH - 30) + "DATE: %s", Result.receiptNumber, LocalDate.now()),
                 String.format("%" + WIDTH + "s", String.format("TIME: %s", LocalTime.now().toString().substring(0, 8))),
                 DASH_LINE,
                 formatStr("QTY", QTY_WIDTH + 1, false) +
@@ -77,7 +74,7 @@ public class FormCalc implements Form {
     }
 
     // возвращает строки итогов
-    private String[] results(long amount, long total, int discountCardValue, long discountTotal) {
+    private static String[] resultLines(long amount, long total, int discountCardValue, long discountTotal) {
         return new String[]{
                 DASH_LINE,
                 "Amount" + " ".repeat(WIDTH - format(amount).length() - 6) + format(amount),
@@ -90,7 +87,7 @@ public class FormCalc implements Form {
     }
 
     // возвращает сформированную строку позиции (QTY, DESCRIPTION, PRICE, TOTAL)
-    private String makePositionLine(String description, int price, int qty) {
+    private static String makePositionLine(String description, int price, int qty) {
         return String.format("%-" + (QTY_WIDTH + 1) + "s", qty) +
                 formatStr(description, DESC_WIDTH, false) + " " +
                 formatStr(format(price), PRICE_WIDTH - 1, true) + " " +
@@ -98,20 +95,20 @@ public class FormCalc implements Form {
     }
 
     // возвращает сформированную строку "discounted" с новой скидочной ценой promoTotal
-    private String makePromoLine(int promoValue, long promoTotal) {
+    private static String makePromoLine(int promoValue, long promoTotal) {
         String part1 = " ".repeat(QTY_WIDTH + 2) + "*" + promoValue + "% discounted*";
         String part2 = format(promoTotal);
         return part1 + " ".repeat(WIDTH - (part1 + part2).length()) + part2;
     }
 
     // возвращает строку заданной ширины (обрезает или добавляет пробелы до или после)
-    private String formatStr(String str, int width, boolean before) {
+    private static String formatStr(String str, int width, boolean before) {
         return (str.length() > width) ? str.substring(0, width - 1) + "*" :
                 before ? String.format("%" + width + "s", str) : String.format("%-" + width + "s", str);
     }
 
     // возвращает строку-цену в доллар-центах
-    private String format(long cents) {
+    private static String format(long cents) {
         return "$" + new DecimalFormat("#0.00").format((double) cents / 100);
     }
 

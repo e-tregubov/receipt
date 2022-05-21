@@ -5,11 +5,12 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 
 
 public class Http {
 
-    public Http(Form form) throws IOException {
+    public Http(ArrayList<String> form) throws IOException {
 
         HttpServer server = HttpServer.create(new InetSocketAddress(8888), 0);
         server.createContext("/check", new MyHTTPHandler(form));
@@ -20,8 +21,8 @@ public class Http {
 
         StringBuilder htmlBuilder = new StringBuilder();
         class MyHTTPHandler implements HttpHandler {
-            public MyHTTPHandler(Form form) {
-                for (String line : form.get())
+            public MyHTTPHandler(ArrayList<String> form) {
+                for (String line : form)
                     htmlBuilder.append(line).append("\n");
             }
 

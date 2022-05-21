@@ -5,23 +5,14 @@ import receipt.cards.CardList;
 import receipt.products.Position;
 import receipt.products.Product;
 import receipt.products.ProductList;
-import java.util.ArrayList;
 import java.util.Map;
 
 public class Calc {
 
-    public static int receiptNumber;
-    public final ArrayList<Position> positionList = new ArrayList<>();
-    public long amount; // общая сумма позиций без скидок
-    public long amountPromo; // общая сумма акционных позиций
-    public final int discountCardValue; // % скидкарты
-    public final long discountTotal; // общая сумма скидки по карте
-    public final long total; // общая сумма чека
+    public static Result result(Data data, ProductList productList, CardList cardList) {
 
-    public Calc(Data data, ProductList productList, CardList cardList) {
-
-        if (++receiptNumber > 9999) receiptNumber = 1; // ограничитель номера чека
-        discountCardValue = cardList.getValue(data.cardNumber);
+        Result result = new Result();
+        result.discountCardValue = cardList.getValue(data.cardNumber);
 
         // перебор аргументов позиций и их вычисление
         for (Map.Entry<Integer, Integer> entry : data.products.entrySet()) {
@@ -37,20 +28,23 @@ public class Calc {
                     productData.promoValue,
                     productData.promoQty);
 
-            positionList.add(position);
+            result.positionList.add(position);
 
             // акция активна?
             if (productData.promoValue > 0 && qty > productData.promoQty) {
                 position.promoTotal = (long) Math.ceil((double) total * (100 - productData.promoValue) / 100);
 
-                amountPromo += position.promoTotal; // накапливаем все скид.позиции
-                amount += position.promoTotal; // накапливаем все позиции
+                result.amountPromo += position.promoTotal; // накапливаем все скид.позиции
+                result.amount += position.promoTotal; // накапливаем все позиции
             }
-            else amount += total;
+            else result.amount += total;
 
         }
 
-        discountTotal = (long) Math.ceil((double) (amount - amountPromo) * discountCardValue / 100);
-        total = amount - discountTotal;
+        result.discountTotal = (long) Math.ceil((double) (result.amount - result.amountPromo) * result.discountCardValue / 100);
+        result.total = result.amount - result.discountTotal;
+
+        return result;
     }
+
 }

@@ -1,16 +1,13 @@
 package receipt;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import receipt.cards.CardGenerator;
 import receipt.cards.CardList;
-import receipt.cards.CardReader;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CardListTest {
 
-    CardList cardList = new CardGenerator();
+    CardList cardList = new CardList(null);
 
     @Test
     void testContains() {
@@ -30,8 +27,5 @@ class CardListTest {
         assertEquals(64, cardList.getValue("1064"));
         assertEquals(96, cardList.getValue("1096"));
     }
-
-    @Test
-    void testSave() { Assertions.assertEquals(cardList.list, new CardReader(CardList.FILE_NAME).list); }
 
 }

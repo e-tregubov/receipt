@@ -11,4 +11,5 @@ public class Position extends Product {
         this.promoValue = promoValue;
         this.promoQty = promoQty;
     }
+
 }

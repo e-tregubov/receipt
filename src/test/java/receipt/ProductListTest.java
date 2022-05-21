@@ -1,20 +1,17 @@
 package receipt;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import receipt.products.Product;
-import receipt.products.ProductGenerator;
 import receipt.products.ProductList;
-import receipt.products.ProductReader;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ProductListTest {
 
-    ProductList productList = new ProductGenerator();
+    ProductList productList = new ProductList(null);
 
     @Test
-    void testIdExists() {
+    void IdExistsTest() {
         assertTrue(productList.contains(1));
         assertTrue(productList.contains(32));
         assertTrue(productList.contains(100));
@@ -24,15 +21,10 @@ class ProductListTest {
     }
 
     @Test
-    void testGetProductByID() {
+    void GetProductByIdTest() {
         Product product = productList.getProductByID(4);
         assertNotEquals(null, product.description);
         assertNotEquals(0, product.price);
-    }
-
-    @Test
-    void testSave() {
-        Assertions.assertEquals(productList.productList, new ProductReader(productList.FILE_NAME).productList);
     }
 
 }
