@@ -2,7 +2,6 @@ package receipt.args;
 
 import receipt.cards.CardList;
 import receipt.products.ProductList;
-
 import java.io.File;
 import java.util.Map;
 
@@ -10,12 +9,15 @@ public class ArgsObj {
 
     public static final int MAX_POSITIONS = 5, MAX_QTY = 999;
     public static final String HELP = "help", PRODUCTS_ARG = "pl", CARDS_ARG = "cl", CARD_ARG = "cn";
-    public Data data; // объект разобранных аргументов чека
+    public Data data; // объект проверенных и разобранных аргументов чека
 
 
-    public ArgsObj(String[] args) throws Exception { data = parser(args); }
+    public ArgsObj(String[] args) throws Exception {
+        data = parser(args);
+    }
 
 
+    // возвращает объект проверенных и разобранных аргументов
     public static Data parser(String[] args) throws Exception {
 
         if (args.length == 0) throw new Exception("No any arguments!");
@@ -76,7 +78,7 @@ public class ArgsObj {
     }
 
 
-
+    // метод проверки идентификаторов позиций и номера скидкарты в объектах данных
     public static void check(Map<Integer, Integer> products,
                              String cardNumber,
                              ProductList productList,
@@ -96,6 +98,7 @@ public class ArgsObj {
         File f = new File(fileName);
         return !(f.exists() && !f.isDirectory());
     }
+
 
 
     private static void help() {

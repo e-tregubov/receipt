@@ -23,9 +23,9 @@ public class CheckRunner {
         Form form = new FormBuilder(Calc.result(data, pList, cList));
 
         form.print();
-        form.save(String.format("receipt%04d.txt", Result.receiptNumber ));
+        form.save(String.format("receipt-%04d.txt", Result.receiptNumber ));
 
-        new Http(form.getLines());
+        new Http(form.get());
 
     }
 

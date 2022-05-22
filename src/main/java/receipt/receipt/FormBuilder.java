@@ -12,12 +12,23 @@ import java.util.Collections;
 public class FormBuilder implements Form {
 
     ArrayList<String> formLines;
+    static final int WIDTH = 45,
+                     QTY_WIDTH = 3,
+                     PRICE_WIDTH = WIDTH/6,
+                     TOTAL_WIDTH = PRICE_WIDTH+3,
+                     DESC_WIDTH = WIDTH-QTY_WIDTH-PRICE_WIDTH-TOTAL_WIDTH;
+    static final String EMPTY_LINE = " ".repeat(WIDTH),
+                        DASH_LINE = "-".repeat(WIDTH);
 
-    public FormBuilder(Result result) { formLines = linesCalc(result); }
+    public FormBuilder(Result result) {
+        formLines = linesCalc(result);
+    }
+
+    // возвращает все сформированные строки чека из объекта
+    public ArrayList<String> get() { return formLines; }
 
 
-    public ArrayList<String> getLines() { return formLines; }
-
+    // возвращает все сформированные строки чека
     public ArrayList<String> linesCalc(Result result) {
 
         ArrayList<String> lines = new ArrayList<>();

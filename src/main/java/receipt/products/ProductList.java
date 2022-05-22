@@ -13,7 +13,7 @@ import java.util.StringJoiner;
 public class ProductList {
 
     public final Map<Integer, Product> productList;
-    public static final int LIST_GEN_LENGTH = 100;
+    public static final int LIST_GEN_LENGTH = 100; // количество генерируемых позиций в объекте позиций
 
 
     public ProductList(String fileName) {
@@ -25,6 +25,8 @@ public class ProductList {
 
     public Product getProductByID(int productID) { return productList.get(productID); }
 
+
+    // возвращает хэшмап позиций, заполняя его из файла
     public Map<Integer, Product> reader(String fileName) {
 
         final Map<Integer, Product> productList = new LinkedHashMap<>();
@@ -48,15 +50,17 @@ public class ProductList {
 
     }
 
+
+    // возвращает сгенерированный хэшмап позиций
     public Map<Integer, Product> generator(int listLength) {
 
-        final Map<Integer, Product> productList = new LinkedHashMap<>();
-        final int MAX_DESCRIPTION_WORDS = 4;
-        final int MAX_PRICE = 100;
-        final int MIN_PROMO = 10; // минимальный % акционной скидки
-        final int MAX_PROMO = 50; // максимальный
-        final int MIN_QTY_PROMO = 5;
-        final int MAX_QTY_PROMO = 10;
+        Map<Integer, Product> productList = new LinkedHashMap<>();
+        int MAX_DESCRIPTION_WORDS = 4,
+            MAX_PRICE = 100,
+            MIN_PROMO = 10, // минимальный % акционной скидки
+            MAX_PROMO = 50,
+            MIN_QTY_PROMO = 5, // минимальное количество от которого возможна акция
+            MAX_QTY_PROMO = 10;
         Lorem lorem = LoremIpsum.getInstance();
 
         for (int id = 0; id < listLength; ) {
@@ -64,7 +68,7 @@ public class ProductList {
             String name = lorem.getWords(1, MAX_DESCRIPTION_WORDS);
             product.description = name.substring(0, 1).toUpperCase() + name.substring(1);
             product.price = 1 + (int) (Math.random() * 100 * MAX_PRICE);
-            if (Math.random() < 0.6) {
+            if (Math.random() < 0.5) {
                 product.promoValue = MIN_PROMO + (int) (Math.random() * (MAX_PROMO - MIN_PROMO));
                 product.promoQty = MIN_QTY_PROMO + (int) (Math.random() * (MAX_QTY_PROMO - MIN_QTY_PROMO));
             }
@@ -75,6 +79,8 @@ public class ProductList {
 
     }
 
+
+    // метод сохранения хэшмапа позиций в файл типа .csv
     public void saver(Map<Integer, Product> productList, String fileName) {
 
         try (FileWriter writer = new FileWriter(fileName, false)) {

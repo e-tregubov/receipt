@@ -10,7 +10,7 @@ import java.util.StringJoiner;
 
 public class CardList {
 
-    public static final int firstGenCardNumber = 1000;
+    public static final int firstGenCardNumber = 1000; // номер первой генерируемой скидкарты, всего их 100 (0-100%)
     public Map<String, Integer> cardList;
     public boolean contains(String cardNumber) { return cardList.containsKey(cardNumber); }
     public int getValue(String cardNumber) { return cardList.getOrDefault(cardNumber, 0); }
@@ -21,7 +21,7 @@ public class CardList {
     }
 
 
-
+    // возвращает хэшмап скидкарт, заполняя его из файла
     public Map<String, Integer> reader(String fileName) {
 
         final Map<String, Integer> cardList = new LinkedHashMap<>();
@@ -43,9 +43,10 @@ public class CardList {
     }
 
 
+    // возвращает сгенерированный хэшмап скидкарт
     public Map<String, Integer> generator(int firstGenCardNum) {
 
-        final Map<String, Integer> cardList = new LinkedHashMap<>();
+        Map<String, Integer> cardList = new LinkedHashMap<>();
 
         for (int number = firstGenCardNum, discountValue = 0; discountValue < 101;) {
             cardList.put(("" + number++), discountValue++);
@@ -55,6 +56,7 @@ public class CardList {
     }
 
 
+    // метод сохранения хэшмапа скидкарт в файл типа .csv
     public void saver(Map<String, Integer> cardList, String fileName) {
 
         try (FileWriter writer = new FileWriter(fileName, false)) {
