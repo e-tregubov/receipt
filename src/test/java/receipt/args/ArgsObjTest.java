@@ -3,151 +3,185 @@ package receipt.args;
 import com.thedeanda.lorem.LoremIpsum;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import receipt.cards.CardList;
 import receipt.products.ProductList;
+import java.util.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ArgsObjTest {
 
+    private final static int TEST_QTY = 256, // количество проходов тестов
+                             MAX_POSITIONS = ArgsObj.MAX_POSITIONS,
+                             MAX_QTY = ArgsObj.MAX_QTY,
+                             PRODUCT_LIST_LENGTH = ProductList.LIST_GEN_LENGTH,
+                             FIRST_CARD_NUMBER = CardList.firstGenCardNumber;
     private final static String P_ARG = ArgsObj.PRODUCTS_ARG + "-",
                                 C_ARG = ArgsObj.CARDS_ARG + "-",
-                                CARD = ArgsObj.CARD_ARG + "-";
-    private final static ProductList productList = new ProductList(null);
-    private final static CardList cardList = new CardList(null);
+                                CARD = ArgsObj.CARD_ARG + "-",
+                                EXISTING_PRODUCT_LIST_FILENAME = "productList.csv",
+                                EXISTING_CARD_LIST_FILENAME = "cardList.csv";
+    private final static ProductList PRODUCT_LIST = new ProductList(null);
+    private final static CardList CARD_LIST = new CardList(null);
     private final static LoremIpsum lorem = LoremIpsum.getInstance();
 
 
 
-    @RepeatedTest(64)
-    void argsParserTest_Too_Much_Arguments_Exception() {
+    // неопознанный аргумент
+    @ParameterizedTest(name = "args \"{0}\" done!")
+    @NullSource
+    @EmptySource
+    @ValueSource(strings = {"hi reviewer", "1-0", "0-1", "5-", "-2", "25-2x", "2e-12", "UA-11", "3-$", "--", "!^*@", "bye!"})
+    void wrong_arg(String arg) { assertThrows(Exception.class, () -> ArgsObj.parser(new String[]{arg})); }
 
-        String[] args = new String[ArgsObj.MAX_POSITIONS+getRandom(1,256)];
 
-        for (int i = 0; i < ArgsObj.MAX_POSITIONS; i++) {
-            args[i] = getPos(getRandom(1,100),getRandom(1,100));
-        }
+    // превышение лимита аргументов
+    @RepeatedTest(TEST_QTY)
+    void too_much_arguments() {
+        String[] args = validProductArgs(randomInt(MAX_POSITIONS + 1, PRODUCT_LIST_LENGTH));
         assertThrows(Exception.class, () -> ArgsObj.parser(args));
     }
 
 
+    // неправильный аргумент позиции по количеству или идентификатору
+    @RepeatedTest(TEST_QTY)
+    void invalid_arg() throws Exception {
+        String[] args = validProductArgs(randomInt(1, MAX_POSITIONS - 1));
+        assertThrows(Exception.class, () -> ArgsObj.parser(addArg(args, invalidArgQty())));
 
-    @ParameterizedTest(name = "args \"{0}\" done!")
-    @NullSource
-    @EmptySource
-    @ValueSource(strings = {
-            "hi", "5-", "1-0", "25-2x", "2e-12",
-            "ee-11", "3-X", "--", CARD+CardList.firstGenCardNumber+1, "1-"+""+ArgsObj.MAX_QTY+1})
-    void argsParserTest_One_Invalid_Arg_Exception(String arg) {
-        assertThrows(Exception.class, () -> ArgsObj.parser(new String[]{arg}));
+        Data data = ArgsObj.parser(addArg(args, invalidArgId()));
+        assertThrows(Exception.class, () -> ArgsObj.check(data.products, null, PRODUCT_LIST, CARD_LIST));
     }
 
 
-    @ParameterizedTest(name = "args \"{0} {1}\" done!")
-    @CsvSource(value = {
-            "1-2, 1-15",
-            "7-1, 10",
-            "2-4, 5-x",
-            "3-11, 2-",
-            P_ARG + "file1.csv," + P_ARG + "file2.csv",
-            C_ARG + "file1.csv," + C_ARG + "file2.csv",
-            CARD + "1234," + CARD + "5678",
-    })
-    void argsParserTest_Two_Invalid_Args_Exception(String arg1, String arg2) {
-        assertThrows(Exception.class, () -> ArgsObj.parser(new String[]{arg1, arg2}));
-    }
+    // правильные сочетания всех аргументов с внедрением невалидного
+    @RepeatedTest(TEST_QTY)
+    void all_invalid_args_combinations() throws Exception {
 
+        // проверка парсера с добавкой невалидного аргумента по количеству товара
+        assertThrows(Exception.class, () ->
+                ArgsObj.parser(addArg(validProductArgs(randomInt(1, MAX_POSITIONS - 1)), invalidArgQty())));
 
-    @RepeatedTest(64)
-    void argsParserTest_Right_Args() throws Exception {
+        // проверка чекера с добавкой невалидного аргумента по идентификатору
+        assertThrows(Exception.class, () ->
+                ArgsObj.check(ArgsObj.parser(addArg(validProductArgs(randomInt(1, MAX_POSITIONS - 1)), invalidArgId())).products, null, PRODUCT_LIST, CARD_LIST));
 
-        final int id1 = getRandom(1,20), qty1 = getRandom(1,5),
-                  id2 = getRandom(21,40), qty2 = getRandom(3,10),
-                  id3 = getRandom(41,60), qty3= getRandom(8,15),
-                  id4 = getRandom(61,80), qty4 = getRandom(10,24),
-                  id5 = getRandom(81,100), qty5 = getRandom(15,45);
+        // проверка парсера с добавкой одного или двух невалидных аргументов файлов
+        assertThrows(Exception.class, () ->
+                ArgsObj.parser(someAdd(validProductArgs(randomInt(1, MAX_POSITIONS)), invalidProductListArg(), inValidCardListArg())));
 
-        final String fileName1 = lorem.getName(),
-                     fileName2 = lorem.getName(),
-                     cardNumber = ""+getRandom(CardList.firstGenCardNumber, CardList.firstGenCardNumber + 100);
-
-        final Data data = ArgsObj.parser(new String[] {
-                P_ARG+fileName1,
-                C_ARG+fileName2,
-                getPos(id1, qty1),
-                getPos(id2, qty2),
-                getPos(id3, qty3),
-                getPos(id4, qty4),
-                getPos(id5, qty5),
-                CARD+cardNumber
-        });
-
-        assertEquals(fileName1, data.productsFileName);
-        assertEquals(fileName2, data.cardsFileName);
-        assertTrue(isProduct(data, id1,id2,id3,id4,id5));
-        assertEquals(cardNumber, data.cardNumber);
-        assertEquals(5, data.products.size());
+        // проверка чекера с добавкой аргумента невалидной карты
+        Data data = ArgsObj.parser(addArg(validProductArgs(randomInt(1, MAX_POSITIONS)), inValidCardArg()));
+        assertThrows(Exception.class, () -> ArgsObj.check(data.products, data.cardNumber, PRODUCT_LIST, CARD_LIST));
 
     }
 
 
-    @RepeatedTest(64)
-    void ArgsData_check_Test_Method_Wrong_ID_Or_Card_Number() throws Exception {
+    // правильные сочетания всех возможных аргументов
+    @RepeatedTest(TEST_QTY)
+    void all_valid_args_combinations() throws Exception {
 
-        int id1;
-        do { id1 = getRandom(1, 1000000); }
-        while (productList.contains(id1));
-        int qty1 = getRandom(1,ArgsObj.MAX_QTY);
-        final String arg1 = getPos(id1 ,qty1);
+        String[] args = possibleAdd(validProductArgs(randomInt(1, MAX_POSITIONS)),
+                validProductListArg(), validCardListArg(), validCardArg());
 
-        int id2;
-        do { id2 = getRandom(1, 1000000); }
-        while (!productList.contains(id2));
-        int qty2 = getRandom(1,ArgsObj.MAX_QTY);
-        final String arg2 = getPos(id2 ,qty2);
+        MyAssertions.assertDoesNotThrow(() -> ArgsObj.parser(args));
 
-        int cardNum;
-        do { cardNum = getRandom(1, 1000000); }
-        while (cardList.contains(""+cardNum));
-        final String card = "" + cardNum;
-
-
-        assertEquals(ArgsObj.invalidIdMsg, ArgsObj.check(ArgsObj.parser(new String[]{arg1}), productList, cardList));
-        assertEquals(ArgsObj.invalidCardNumberMsg, ArgsObj.check(ArgsObj.parser(new String[]{arg2, CARD+""+card}), productList, cardList));
+        Data data = ArgsObj.parser(args);
+        MyAssertions.assertDoesNotThrow(() -> ArgsObj.check(data.products, data.cardNumber, PRODUCT_LIST, CARD_LIST));
 
     }
-
-    private String getRandomValidProductArgsString(int argsQty) {
-
-        StringBuilder args = new StringBuilder();
-        String arg;
-
-        for (int argsNum = 0; argsNum < argsQty; argsNum++ ) {
-            do arg = getValidArg(); while (!args.toString().contains(arg));
-            args.append(arg).append(" ");
+    @FunctionalInterface interface FailingRunnable { void run() throws Exception; }
+    static class MyAssertions {
+        public static void assertDoesNotThrow(FailingRunnable action) {
+            try { action.run(); }
+            catch (Exception ex) { throw new Error("Wrong exception!", ex); }
         }
-        return args.deleteCharAt(args.length()-1).toString();
-
     }
 
-    private String getValidArg() {
-        return getPos(getRandom(1, ProductList.LIST_GEN_LENGTH), getRandom(1, ArgsObj.MAX_QTY));
-    }
-    private String getInvalidIdArg() {
-        return getPos(getRandom(ProductList.LIST_GEN_LENGTH+1, ProductList.LIST_GEN_LENGTH+65536), getRandom(1, ArgsObj.MAX_QTY));
-    }
-    private String getInvalidQtyArg() {
-        return getPos(getRandom(1, ProductList.LIST_GEN_LENGTH), getRandom(ArgsObj.MAX_QTY+1, ArgsObj.MAX_QTY+65536));
+
+    // возвращает переданный массив с добавленными аргументами (возможно без добавления)
+    private String[] possibleAdd(String[] args, String ... inserts ) {
+        for (String arg : inserts)
+            if (chance()) args = addArg(args, arg);
+        return args;
     }
 
-    private String getPos(int id, int qty) { return "" + id + "-" + qty; }
-    private int getRandom(int min, int max) { return min + (int) (Math.random() * ((max - min) + 1)); }
-    private boolean isProduct(Data data, int ...ids) {
-        for (int id: ids) { if (!data.products.containsKey(id)) return false; }
-        return true;
+    // возвращает переданный массив с добавленными аргументами (хотя бы один будет добавлен)
+    private String[] someAdd(String[] args, String ... inserts ) {
+        int length = args.length;
+        while (args.length == length)
+            for (String arg : inserts) {
+                if (chance())
+                    args = addArg(args, arg);
+            }
+        return args;
     }
+
+    // возвращает аргумент указывающий на существующий файл позиций
+    private String validProductListArg() { return P_ARG + EXISTING_PRODUCT_LIST_FILENAME; }
+
+    // возвращает аргумент указывающий на случайный несуществующий файл позиций
+    private String invalidProductListArg() { return C_ARG + lorem.getWords(1); }
+
+    // возвращает аргумент указывающий на существующий файл скидкарт
+    private String validCardListArg() { return C_ARG + EXISTING_CARD_LIST_FILENAME; }
+
+    // возвращает аргумент указывающий на случайный несуществующий файл скидкарт
+    private String inValidCardListArg() { return C_ARG + lorem.getWords(1); }
+
+    // возвращает аргумент содеражщий случайный валидный номер скидкарты
+    private String validCardArg() { return CARD + (FIRST_CARD_NUMBER + randomInt(0, 100)); }
+
+    // возвращает аргумент содеражщий случайный невалидный номер скидкарты
+    private String inValidCardArg() { return CARD + (FIRST_CARD_NUMBER + randomInt(FIRST_CARD_NUMBER + 101, FIRST_CARD_NUMBER + 100000)); }
+
+    // добавляет переданный аргумент в массив аргументов на случайную позицию
+    private String[] addArg(String[] args, String arg) {
+        List<String> list = new ArrayList<>(Arrays.asList(args));
+        list.add(randomInt(0, args.length - 1), arg);
+        return list.toArray(args);
+    }
+
+    // возвращает массив случайных валидных аргументов позиций заданной длины
+    private String[] validProductArgs(int argsLength) {
+        List<Integer> ids = new ArrayList<>(argsLength);
+        while (ids.size() < argsLength) {
+            int id = validId();
+            if (!ids.contains(id)) ids.add(id);
+        }
+        List<String> args = new ArrayList<>();
+        for (int id : ids) args.add(formatArg(id, validQty()));
+        return args.toArray(new String[argsLength]);
+    }
+
+    // возвращает аргумент позиции со случайным невалидным идентификатором
+    private String invalidArgId() { return formatArg(invalidId(), validQty()); }
+
+    // возвращает аргумент позиции со случайным невалидным количеством
+    private String invalidArgQty() { return formatArg(validId(), invalidQty()); }
+
+    // возвращает строку сформированного аргумента позиции (id-qty)
+    private String formatArg(int id, int qty) { return "" + id + "-" + qty; }
+
+    // возвращает случайный валидный идентификатор позиции
+    private int validId() { return randomInt(1, PRODUCT_LIST_LENGTH); }
+
+    // возвращает случайный невалидный идентификатор позиции
+    private int invalidId() { return randomInt(PRODUCT_LIST_LENGTH + 1, PRODUCT_LIST_LENGTH + 100); }
+
+    // возвращает случайное валидное количество позиции
+    private int validQty() { return randomInt(1, MAX_QTY); }
+
+    // возвращает случайное невалидное количество позиции
+    private int invalidQty() { return randomInt(MAX_QTY + 1, MAX_QTY + 100); }
+
+    // возвращает true или false с равной долей вероятности
+    private boolean chance() { return Math.random() < 0.5; }
+
+    // возвращает случайное число в заданном диапазоне
+    private int randomInt(int min, int max) { return min + (int) (Math.random() * ((max - min) + 1)); }
 
 }

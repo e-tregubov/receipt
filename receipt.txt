@@ -1,11 +1,11 @@
                                              
-                CASH RECEIPT
-              SuperMarket-JAVA
-         12, MILKY WAY Galaxy/Earth
-              Tel: 123-456-7890
+                CASH RECEIPT                 
+              SuperMarket-JAVA               
+         12, MILKY WAY Galaxy/Earth          
+              Tel: 123-456-7890              
                                              
-CASHIER: #0001               DATE: 2022-05-20
-                               TIME: 17:50:40
+CASHIER: #0001               DATE: 2022-05-21
+                               TIME: 15:55:26
 ---------------------------------------------
 QTY DESCRIPTION                PRICE    TOTAL
                                              

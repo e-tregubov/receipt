@@ -64,7 +64,7 @@ public class ProductList {
             String name = lorem.getWords(1, MAX_DESCRIPTION_WORDS);
             product.description = name.substring(0, 1).toUpperCase() + name.substring(1);
             product.price = 1 + (int) (Math.random() * 100 * MAX_PRICE);
-            if (Math.random() < 0.7) {
+            if (Math.random() < 0.6) {
                 product.promoValue = MIN_PROMO + (int) (Math.random() * (MAX_PROMO - MIN_PROMO));
                 product.promoQty = MIN_QTY_PROMO + (int) (Math.random() * (MAX_QTY_PROMO - MIN_QTY_PROMO));
             }

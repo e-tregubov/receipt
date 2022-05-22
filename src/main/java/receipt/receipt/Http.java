@@ -1,4 +1,5 @@
 package receipt.receipt;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -7,23 +8,22 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 
-
 public class Http {
 
-    public Http(ArrayList<String> form) throws IOException {
+    public Http(ArrayList<String> formLines) throws IOException {
 
         HttpServer server = HttpServer.create(new InetSocketAddress(8888), 0);
-        server.createContext("/check", new MyHTTPHandler(form));
+        server.createContext("/check", new MyHTTPHandler(formLines));
         server.setExecutor(null);
         System.out.println("HTTP server ready. Listening port:8888..");
         server.start();
+
     }
 
         StringBuilder htmlBuilder = new StringBuilder();
         class MyHTTPHandler implements HttpHandler {
             public MyHTTPHandler(ArrayList<String> form) {
-                for (String line : form)
-                    htmlBuilder.append(line).append("\n");
+                for (String line : form) htmlBuilder.append(line).append("\n");
             }
 
             @Override

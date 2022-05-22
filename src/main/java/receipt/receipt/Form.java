@@ -11,7 +11,7 @@ public interface Form {
     int DESC_WIDTH = WIDTH-QTY_WIDTH-PRICE_WIDTH-TOTAL_WIDTH;
     String EMPTY_LINE = " ".repeat(WIDTH), DASH_LINE = "-".repeat(WIDTH);
 
-    ArrayList<String> getLines();
+    ArrayList<String> getLines() ;
     void print();
     void save();
 

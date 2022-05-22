@@ -11,20 +11,23 @@ import java.util.Collections;
 
 public class FormBuilder implements Form {
 
-    ArrayList<String> lines;
+    ArrayList<String> formLines;
 
-    public FormBuilder(Result result) { lines = linesCalc(result); }
+    public FormBuilder(Result result) { formLines = linesCalc(result); }
 
 
-    public ArrayList<String> getLines() { return lines; }
+    public ArrayList<String> getLines() { return formLines; }
 
     public ArrayList<String> linesCalc(Result result) {
 
         ArrayList<String> lines = new ArrayList<>();
 
         // добавление строк шапки в форму с выравниванием по центру
-        for (String line : capLines()) {
-            lines.add(" ".repeat(WIDTH / 2 - line.length() / 2) + line);
+        for (String capLine : capLines()) {
+            String indent = " ".repeat(WIDTH / 2 - capLine.length() / 2);
+            String line = (indent + capLine + indent);
+            if (line.length() == WIDTH) lines.add(line);
+            else lines.add(line + " ");
         }
 
         // добавление строк позиций в форму
@@ -39,12 +42,12 @@ public class FormBuilder implements Form {
         return lines;
     }
 
-    public void print() { for (String line : lines) System.out.println(line); }
+    public void print() { for (String line : formLines) System.out.println(line); }
 
     public void save() {
         String fileName = "receipt.txt";
         try (FileWriter writer = new FileWriter(fileName, false)) {
-            for (String line : lines) writer.write(line + "\n");
+            for (String line : formLines) writer.write(line + "\n");
             writer.flush();
             System.out.printf("Receipt form saved in \"%s\" file\n", fileName);
         } catch (IOException ex) {

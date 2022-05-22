@@ -2,6 +2,8 @@ package receipt.args;
 
 import receipt.cards.CardList;
 import receipt.products.ProductList;
+
+import java.io.File;
 import java.util.Map;
 
 public class ArgsObj {
@@ -30,12 +32,14 @@ public class ArgsObj {
 
             if (part[0].equals(PRODUCTS_ARG))
                 if (data.productsFileName == null) {
+                    if (noFile(part[1])) throw new Exception("No such product list file: \"" + part[1] + "\"");
                     data.productsFileName = part[1];
                     continue;
                 } else throw new Exception(String.format("Multiple \"%s\" argument!", PRODUCTS_ARG));
 
             if (part[0].equals(CARDS_ARG))
                 if (data.cardsFileName == null) {
+                    if (noFile(part[1])) throw new Exception("No such card list file: \"" + part[1] + "\"");
                     data.cardsFileName = part[1];
                     continue;
                 } else throw new Exception(String.format("Multiple \"%s\" argument!", CARDS_ARG));
@@ -52,6 +56,8 @@ public class ArgsObj {
                 throw new Exception(String.format("Position argument quantity \"%s\" is not a number!", part[1]));
 
             int id = Integer.parseInt(part[0]);
+            if (id == 0)
+                throw new Exception("Position argument ID cannot be \"0\"");
             if (data.products.containsKey(id))
                 throw new Exception(String.format("Duplicate position argument ID: \"%d\"", id));
 
@@ -71,20 +77,25 @@ public class ArgsObj {
 
 
 
-    public static final String invalidCardNumberMsg = "Wrong discount card number!",
-                               invalidIdMsg = "Invalid argument(s) product ID!";
-    public static String check(Data data, ProductList productList, CardList cardList) {
+    public static void check(Map<Integer, Integer> products,
+                             String cardNumber,
+                             ProductList productList,
+                             CardList cardList) throws Exception {
 
-        if (data.cardNumber != null && !cardList.contains((data.cardNumber)))
-            return invalidCardNumberMsg;
+        if (cardNumber != null && !cardList.contains((cardNumber)))
+            throw new Exception("Wrong discount card number!");
 
-        for (Map.Entry<Integer, Integer> entry : data.products.entrySet()) {
+        for (Map.Entry<Integer, Integer> entry : products.entrySet()) {
             if (!productList.contains(entry.getKey()))
-                return invalidIdMsg;
+                throw new Exception(String.format("Invalid product argument ID: \"%s\"", entry.getKey()));
         }
-        return null;
+
     }
 
+    private static boolean noFile(String fileName) {
+        File f = new File(fileName);
+        return !(f.exists() && !f.isDirectory());
+    }
 
 
     private static void help() {
