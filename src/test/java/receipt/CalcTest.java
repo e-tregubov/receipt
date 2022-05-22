@@ -8,50 +8,49 @@ import receipt.products.ProductList;
 import receipt.receipt.Calc;
 import receipt.receipt.Result;
 
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CalcTest {
+public class CalcTest extends Test {
 
-    ProductList productList = new ProductList("productList.csv");
-    CardList cardList = new CardList("cardList.csv");
-    long amount = 0, amountPromo = 0;
+    private static final ProductList productList = new ProductList(EXISTING_PRODUCT_LIST_FILENAME);
+    private static final CardList cardList = new CardList(EXISTING_CARD_LIST_FILENAME);
+    private long amount = 0, amountPromo = 0; // аккумуляторы
 
-    @RepeatedTest(3)
-    void CalcTest_5_Positions() throws Exception {
 
-        int id1 = getNum(1,20), qty1 = getNum(1,5),
-            id2 = getNum(21,40), qty2 = getNum(3,10),
-            id3 = getNum(41,60), qty3= getNum(8,15),
-            id4 = getNum(61,80), qty4 = getNum(10,24),
-            id5 = getNum(81,100), qty5 = getNum(15,45);
+    @RepeatedTest(TEST_QTY)
+    void calc_test_random_args() throws Exception {
 
-        String[] args = {getPos(id1, qty1),
-                         getPos(id2, qty2),
-                         getPos(id3, qty3),
-                         getPos(id4, qty4),
-                         getPos(id5, qty5),
-                         ArgsObj.CARD_ARG + "-" + ""+getNum(1000,1100)};
+        // случайные валидные аргументы
+        String[] args = possibleAdd(validProductArgs(randomInt(1, MAX_POSITIONS)),
+                validProductListArg(), validCardListArg(), validCardArg());
 
+        // объект распарсенных аргументов
         Data data = new ArgsObj(args).data;
-        final Result result = Calc.result(data, productList, cardList);
 
-        calcPosition(id1, qty1);
-        calcPosition(id2, qty2);
-        calcPosition(id3, qty3);
-        calcPosition(id4, qty4);
-        calcPosition(id5, qty5);
+        // объект вычисленных результатов
+        Result result = Calc.result(data, productList, cardList);
 
+        // перебор позиций с их вычислением
+        for (Map.Entry<Integer, Integer> entry : data.products.entrySet()) {
+            calcPosition(entry.getKey(), entry.getValue());
+        }
+
+        // подсчёт итогов
         long discountTotal = (long) Math.ceil((double) (amount - amountPromo)
                 * cardList.getValue(data.cardNumber) / 100);
         long total = amount - discountTotal;
 
+        // сравнение результатов с результатами объекта
         assertEquals(amount, result.amount);
         assertEquals(discountTotal, result.discountTotal);
         assertEquals(total, result.total);
 
     }
 
-    void calcPosition(int id, int qty) {
+    // расчёт позиции с аккумулированием итогов в переменные
+    private void calcPosition(int id, int qty) {
 
         int price = productList.getProductByID(id).price;
         int promoValue = productList.getProductByID(id).promoValue;
@@ -66,8 +65,5 @@ public class CalcTest {
         else amount += total;
 
     }
-    private String getPos(int id, int qty) { return "" + id + "-" + qty; }
-
-    private int getNum(int min, int max) { return min + (int) (Math.random() * ((max - min) + 1)); }
 
 }

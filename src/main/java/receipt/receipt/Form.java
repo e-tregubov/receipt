@@ -13,6 +13,6 @@ public interface Form {
 
     ArrayList<String> getLines() ;
     void print();
-    void save();
+    void save(String fileName);
 
 }

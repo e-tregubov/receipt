@@ -16,15 +16,17 @@ public class CheckRunner {
         ProductList pList = new ProductList(data.productsFileName);
         CardList cList = new CardList(data.cardsFileName);
 
-        // проверка указаний аргументов в данных
+        // проверка указаний аргументов в объектах данных
         ArgsObj.check(data.products, data.cardNumber, pList, cList);
 
         // формируем чек
         Form form = new FormBuilder(Calc.result(data, pList, cList));
+
         form.print();
-        form.save();
+        form.save(String.format("receipt%04d.txt", Result.receiptNumber ));
 
         new Http(form.getLines());
+
     }
 
 }

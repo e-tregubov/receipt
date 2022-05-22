@@ -44,8 +44,7 @@ public class FormBuilder implements Form {
 
     public void print() { for (String line : formLines) System.out.println(line); }
 
-    public void save() {
-        String fileName = "receipt.txt";
+    public void save(String fileName) {
         try (FileWriter writer = new FileWriter(fileName, false)) {
             for (String line : formLines) writer.write(line + "\n");
             writer.flush();
