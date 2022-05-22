@@ -2,14 +2,11 @@ package receipt.args;
 
 import com.thedeanda.lorem.LoremIpsum;
 import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.NullSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import receipt.cards.CardList;
 import receipt.products.ProductList;
 import java.util.*;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class ArgsObjTest {
@@ -30,53 +27,34 @@ class ArgsObjTest {
 
 
 
-    // неопознанный аргумент
-    @ParameterizedTest(name = "args \"{0}\" done!")
+    // правильные сочетания всех аргументов с превышением лимита, внедрением невалидного или неопознанного
     @NullSource
     @EmptySource
-    @ValueSource(strings = {"hi reviewer", "1-0", "0-1", "5-", "-2", "25-2x", "2e-12", "UA-11", "3-$", "--", "!^*@", "bye!"})
-    void wrong_arg(String arg) { assertThrows(Exception.class, () -> ArgsObj.parser(new String[]{arg})); }
-
-
-    // превышение лимита аргументов
-    @RepeatedTest(TEST_QTY)
-    void too_much_arguments() {
-        String[] args = validProductArgs(randomInt(MAX_POSITIONS + 1, PRODUCT_LIST_LENGTH));
-        assertThrows(Exception.class, () -> ArgsObj.parser(args));
-    }
-
-
-    // неправильный аргумент позиции по количеству или идентификатору
-    @RepeatedTest(TEST_QTY)
-    void invalid_arg() throws Exception {
-        String[] args = validProductArgs(randomInt(1, MAX_POSITIONS - 1));
-        assertThrows(Exception.class, () -> ArgsObj.parser(addArg(args, invalidArgQty())));
-
-        Data data = ArgsObj.parser(addArg(args, invalidArgId()));
-        assertThrows(Exception.class, () -> ArgsObj.check(data.products, null, PRODUCT_LIST, CARD_LIST));
-    }
-
-
-    // правильные сочетания всех аргументов с внедрением невалидного
     @RepeatedTest(TEST_QTY)
     void all_invalid_args_combinations() throws Exception {
 
-        // проверка парсера с добавкой невалидного аргумента по количеству товара
+        // превышение лимита
+        assertThrows(Exception.class, () -> ArgsObj.parser(validProductArgs(randomInt(MAX_POSITIONS + 1, PRODUCT_LIST_LENGTH))));
+
+        // невалидный по количеству товара
         assertThrows(Exception.class, () ->
                 ArgsObj.parser(addArg(validProductArgs(randomInt(1, MAX_POSITIONS - 1)), invalidArgQty())));
 
-        // проверка чекера с добавкой невалидного аргумента по идентификатору
+        // невалидный по идентификатору
         assertThrows(Exception.class, () ->
                 ArgsObj.check(ArgsObj.parser(addArg(validProductArgs(randomInt(1, MAX_POSITIONS - 1)), invalidArgId())).products, null, PRODUCT_LIST, CARD_LIST));
 
-        // проверка парсера с добавкой одного или двух невалидных аргументов файлов
+        // невалидный по имени файла(файлов)
         assertThrows(Exception.class, () ->
                 ArgsObj.parser(someAdd(validProductArgs(randomInt(1, MAX_POSITIONS)), invalidProductListArg(), inValidCardListArg())));
 
-        // проверка чекера с добавкой аргумента невалидной карты
+        // невалидный по номеру скидкарты
         Data data = ArgsObj.parser(addArg(validProductArgs(randomInt(1, MAX_POSITIONS)), inValidCardArg()));
         assertThrows(Exception.class, () -> ArgsObj.check(data.products, data.cardNumber, PRODUCT_LIST, CARD_LIST));
 
+        // неопознанный
+        assertThrows(Exception.class, () ->
+                ArgsObj.parser(addArg(validProductArgs(randomInt(1, MAX_POSITIONS - 1)), wrongArg())));
     }
 
 
@@ -155,6 +133,12 @@ class ArgsObjTest {
         List<String> args = new ArrayList<>();
         for (int id : ids) args.add(formatArg(id, validQty()));
         return args.toArray(new String[argsLength]);
+    }
+
+    private String wrongArg() {
+        String[] args = {"hi reviewer", "1-0", "0-1", "5-", "-2", "25-2x", "2e-12", "UA-11", "3-$", "--", "!^*@", "bye!"};
+        int rnd = new Random().nextInt(args.length);
+        return (chance()) ? args[rnd] : lorem.getWords(1);
     }
 
     // возвращает аргумент позиции со случайным невалидным идентификатором
