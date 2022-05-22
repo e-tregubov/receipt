@@ -23,7 +23,7 @@ public class ProductList {
 
     public boolean contains(int id) { return productList.containsKey(id); }
 
-    public Product getProductByID(int productID) { return productList.get(productID); }
+    public Product getValue(int productID) { return productList.get(productID); }
 
 
     // возвращает хэшмап позиций, заполняя его из файла

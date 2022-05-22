@@ -17,7 +17,7 @@ public class Calc {
         // перебор аргументов позиций и их вычисление
         for (Map.Entry<Integer, Integer> entry : data.products.entrySet()) {
 
-            Product productData = productList.getProductByID(entry.getKey());
+            Product productData = productList.getValue(entry.getKey());
             int qty = entry.getValue();
             long total = (long) productData.price * qty;
 

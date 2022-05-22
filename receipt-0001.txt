@@ -5,17 +5,18 @@
               Tel: 123-456-7890              
                                              
 CASHIER: #0001               DATE: 2022-05-23
-                               TIME: 00:40:40
+                               TIME: 00:50:30
 ---------------------------------------------
 QTY DESCRIPTION                PRICE    TOTAL
                                              
 2   Tristique ocurreret       $97,42  $194,84
-7   Senectus aeque            $86,33  $604,31
-11  Omittantur convenire      $35,13  $386,43
+7   Per                       $45,83  $320,81
+11  Pericula convallis iudic* $92,43 $1016,73
+     *43% discounted*                 $579,54
 25  Propriae intellegebat     $23,94  $598,50
 3   Curae partiendo           $43,69  $131,07
 ---------------------------------------------
-Amount                               $1915,15
-Card discount: 21%                    $402,19
-TOTAL                                $1512,96
+Amount                               $1824,76
+Card discount: 21%                    $261,50
+TOTAL                                $1563,26
                                              

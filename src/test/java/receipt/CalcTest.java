@@ -52,9 +52,9 @@ public class CalcTest extends Test {
     // расчёт позиции с аккумулированием итогов в переменные
     private void calcPosition(int id, int qty) {
 
-        int price = productList.getProductByID(id).price;
-        int promoValue = productList.getProductByID(id).promoValue;
-        int promoQty = productList.getProductByID(id).promoQty;
+        int price = productList.getValue(id).price;
+        int promoValue = productList.getValue(id).promoValue;
+        int promoQty = productList.getValue(id).promoQty;
         int total = price * qty;
 
         if (promoValue > 0 && qty > promoQty) {
