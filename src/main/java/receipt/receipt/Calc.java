@@ -32,7 +32,7 @@ public class Calc {
 
             // акция активна?
             if (productData.promoValue > 0 && qty > productData.promoQty) {
-                position.promoTotal = (long) Math.ceil((double) total * (100 - productData.promoValue) / 100);
+                position.promoTotal = (long) Math.floor((double) total * (100 - productData.promoValue) / 100);
 
                 result.amountPromo += position.promoTotal; // накапливаем все скид.позиции
                 result.amount += position.promoTotal; // накапливаем все позиции

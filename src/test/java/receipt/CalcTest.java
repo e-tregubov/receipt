@@ -58,7 +58,7 @@ public class CalcTest extends Test {
         int total = price * qty;
 
         if (promoValue > 0 && qty > promoQty) {
-            long promoTotal = (long) Math.ceil((double) total * (100 - promoValue) / 100);
+            long promoTotal = (long) Math.floor((double) total * (100 - promoValue) / 100);
             amountPromo += promoTotal;
             amount += promoTotal;
         }
