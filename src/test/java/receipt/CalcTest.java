@@ -12,13 +12,14 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CalcTest extends Test {
+public class CalcTest extends Methods {
 
     private static final ProductList productList = new ProductList(EXISTING_PRODUCT_LIST_FILENAME);
     private static final CardList cardList = new CardList(EXISTING_CARD_LIST_FILENAME);
     private long amount = 0, amountPromo = 0; // аккумуляторы
 
 
+    // калькуляция динамически генерируемых валидных аргументов
     @RepeatedTest(TEST_QTY)
     void calc_random_valid_args_test() throws Exception {
 

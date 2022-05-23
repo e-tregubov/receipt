@@ -7,7 +7,7 @@ import receipt.args.Args;
 import receipt.args.Data;
 import static org.junit.jupiter.api.Assertions.*;
 
-class ArgsTest extends Test {
+class ArgsTest extends Methods {
 
 
     // превышение лимита, внедрение невалидного или неопознанного аргумента в валидные

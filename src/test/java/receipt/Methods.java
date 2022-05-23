@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class Test {
+public class Methods {
 
     final static int TEST_QTY = 256, // количество проходов тестов
                      MAX_POSITIONS = Args.MAX_POSITIONS,
