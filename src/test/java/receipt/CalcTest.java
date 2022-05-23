@@ -1,7 +1,7 @@
 package receipt;
 
 import org.junit.jupiter.api.RepeatedTest;
-import receipt.args.ArgsObj;
+import receipt.args.Args;
 import receipt.args.Data;
 import receipt.cards.CardList;
 import receipt.products.ProductList;
@@ -20,14 +20,14 @@ public class CalcTest extends Test {
 
 
     @RepeatedTest(TEST_QTY)
-    void calc_test_random_args() throws Exception {
+    void calc_random_valid_args_test() throws Exception {
 
         // случайные валидные аргументы
         String[] args = possibleAdd(validProductArgs(randomInt(1, MAX_POSITIONS)),
                 validProductListArg(), validCardListArg(), validCardArg());
 
         // объект распарсенных аргументов
-        Data data = new ArgsObj(args).data;
+        Data data = Args.parser(args);
 
         // объект вычисленных результатов
         Result result = Calc.result(data, productList, cardList);

@@ -1,7 +1,7 @@
 package receipt;
 
 import com.thedeanda.lorem.LoremIpsum;
-import receipt.args.ArgsObj;
+import receipt.args.Args;
 import receipt.cards.CardList;
 import receipt.products.ProductList;
 import java.util.ArrayList;
@@ -12,14 +12,14 @@ import java.util.Random;
 public class Test {
 
     final static int TEST_QTY = 256, // количество проходов тестов
-                     MAX_POSITIONS = ArgsObj.MAX_POSITIONS,
-                     MAX_QTY = ArgsObj.MAX_QTY,
+                     MAX_POSITIONS = Args.MAX_POSITIONS,
+                     MAX_QTY = Args.MAX_QTY,
                      PRODUCT_LIST_LENGTH = ProductList.LIST_GEN_LENGTH,
                      FIRST_CARD_NUMBER = CardList.firstGenCardNumber;
 
-    final static String P_ARG = ArgsObj.PRODUCTS_ARG + "-",
-                        C_ARG = ArgsObj.CARDS_ARG + "-",
-                        CARD = ArgsObj.CARD_ARG + "-",
+    final static String P_ARG = Args.PRODUCTS_ARG + "-",
+                        C_ARG = Args.CARDS_ARG + "-",
+                        CARD = Args.CARD_ARG + "-",
                         EXISTING_PRODUCT_LIST_FILENAME = "productList.csv",
                         EXISTING_CARD_LIST_FILENAME = "cardList.csv";
 
