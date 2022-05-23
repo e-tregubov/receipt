@@ -1,5 +1,8 @@
 Console app implements the functionality of a store receipt
 
+![изображение](https://user-images.githubusercontent.com/59832216/169733873-d74dd484-37c4-466e-a3df-42c86257d92d.png)
+
+
 - run: java CheckRunner <options>
 - single argument help shows using examples
 - arguments format: ID-QTY (product identifier - product quantity)
