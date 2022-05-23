@@ -1,7 +1,5 @@
-Console app implements the functionality of a store receipt:
-
-![изображение](https://user-images.githubusercontent.com/59832216/169733873-d74dd484-37c4-466e-a3df-42c86257d92d.png)
-
+Console app implements the functionality of a store receipt
+![изображение](https://user-images.githubusercontent.com/59832216/169828405-5019fed5-e517-476d-b64e-1752974e9752.png)
 
 - run: java CheckRunner <options>
 - single argument 'help' shows using examples: java CheckRunner help
