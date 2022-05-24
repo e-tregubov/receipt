@@ -1,5 +1,6 @@
 package receipt.cards;
 
+import receipt.DataMap;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -8,16 +9,21 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringJoiner;
 
-public class CardList {
+public class CardList implements DataMap<String, Integer> {
 
-    public static final int firstGenCardNumber = 1000; // номер первой генерируемой скидкарты, всего их 100 (0-100%)
+    public static final int CARD_LIST_LENGTH = 100; // номер первой генерируемой скидкарты, всего их 100 (0-100%)
+
     public Map<String, Integer> cardList;
-    public boolean contains(String cardNumber) { return cardList.containsKey(cardNumber); }
-    public int getValue(String cardNumber) { return cardList.getOrDefault(cardNumber, 0); }
+
+    public Map<String, Integer> get() { return cardList; }
+
+    public boolean contains(String cardNumber) { return !cardList.containsKey(cardNumber); }
+
+    public Integer getValue(String cardNumber) { return cardList.getOrDefault(cardNumber, 0); }
 
 
     public CardList(String fileName) {
-        cardList = (fileName == null) ? generator(firstGenCardNumber) : reader(fileName);
+        cardList = (fileName == null) ? generator(CARD_LIST_LENGTH) : reader(fileName);
     }
 
 
@@ -44,12 +50,12 @@ public class CardList {
 
 
     // возвращает сгенерированный хэшмап скидкарт
-    public Map<String, Integer> generator(int firstGenCardNum) {
+    public Map<String, Integer> generator(int listLength) {
 
         Map<String, Integer> cardList = new LinkedHashMap<>();
 
-        for (int number = firstGenCardNum, discountValue = 0; discountValue < 101;) {
-            cardList.put(("" + number++), discountValue++);
+        for (int number = 0, discountValue = 0; number < listLength;) {
+            cardList.put(("" + ++number), ++discountValue);
         }
         System.out.println("Discount card list has been successfully generated");
         return cardList;
@@ -57,7 +63,7 @@ public class CardList {
 
 
     // метод сохранения хэшмапа скидкарт в файл типа .csv
-    public void saver(Map<String, Integer> cardList, String fileName) {
+    public void save(String fileName) {
 
         try (FileWriter writer = new FileWriter(fileName, false)) {
             for (Map.Entry<String, Integer> entry : cardList.entrySet()) {

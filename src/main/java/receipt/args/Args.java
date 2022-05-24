@@ -1,7 +1,7 @@
 package receipt.args;
 
-import receipt.cards.CardList;
-import receipt.products.ProductList;
+import receipt.DataMap;
+import receipt.products.Product;
 import java.io.File;
 import java.util.Map;
 
@@ -75,14 +75,14 @@ public class Args {
     // метод проверки идентификаторов позиций и номера скидкарты в объектах данных
     public static void check(Map<Integer, Integer> products,
                              String cardNumber,
-                             ProductList productList,
-                             CardList cardList) throws Exception {
+                             DataMap<Integer, Product> productList,
+                             DataMap<String, Integer> cardList) throws Exception {
 
-        if (cardNumber != null && !cardList.contains((cardNumber)))
+        if (cardNumber != null && cardList.contains((cardNumber)))
             throw new Exception("Wrong discount card number!");
 
         for (Map.Entry<Integer, Integer> entry : products.entrySet()) {
-            if (!productList.contains(entry.getKey()))
+            if (productList.contains(entry.getKey()))
                 throw new Exception(String.format("Invalid product argument ID: \"%s\"", entry.getKey()));
         }
 

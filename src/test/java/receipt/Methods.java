@@ -15,7 +15,7 @@ public class Methods {
                      MAX_POSITIONS = Args.MAX_POSITIONS,
                      MAX_QTY = Args.MAX_QTY,
                      PRODUCT_LIST_LENGTH = ProductList.LIST_GEN_LENGTH,
-                     FIRST_CARD_NUMBER = CardList.firstGenCardNumber;
+                     CARD_LIST_LENGTH = CardList.CARD_LIST_LENGTH;
 
     final static String P_ARG = Args.PRODUCTS_ARG + "-",
                         C_ARG = Args.CARDS_ARG + "-",
@@ -60,10 +60,10 @@ public class Methods {
     String inValidCardListArg() { return C_ARG + lorem.getWords(1); }
 
     // возвращает аргумент содеражщий случайный валидный номер скидкарты
-    String validCardArg() { return CARD + (FIRST_CARD_NUMBER + randomInt(0, 100)); }
+    String validCardArg() { return CARD + (randomInt(1, CARD_LIST_LENGTH)); }
 
     // возвращает аргумент содеражщий случайный невалидный номер скидкарты
-    String inValidCardArg() { return CARD + (FIRST_CARD_NUMBER + randomInt(FIRST_CARD_NUMBER + 101, FIRST_CARD_NUMBER + 100000)); }
+    String inValidCardArg() { return CARD + (randomInt(1 + CARD_LIST_LENGTH, CARD_LIST_LENGTH + 1000000)); }
 
     // добавляет переданный аргумент в массив аргументов на случайную позицию
     String[] addArg(String[] args, String arg) {

@@ -4,18 +4,18 @@ import org.junit.jupiter.api.RepeatedTest;
 import receipt.args.Args;
 import receipt.args.Data;
 import receipt.cards.CardList;
+import receipt.products.Product;
 import receipt.products.ProductList;
 import receipt.receipt.Calc;
 import receipt.receipt.Result;
-
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CalcTest extends Methods {
 
-    private static final ProductList productList = new ProductList(EXISTING_PRODUCT_LIST_FILENAME);
-    private static final CardList cardList = new CardList(EXISTING_CARD_LIST_FILENAME);
+    private static final DataMap<Integer, Product> productList = new ProductList(EXISTING_PRODUCT_LIST_FILENAME);
+    private static final DataMap<String, Integer> cardList = new CardList(EXISTING_CARD_LIST_FILENAME);
     private long amount = 0, amountPromo = 0; // аккумуляторы
 
 

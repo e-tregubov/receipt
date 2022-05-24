@@ -2,6 +2,7 @@ package receipt.products;
 
 import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
+import receipt.DataMap;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -10,20 +11,22 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringJoiner;
 
-public class ProductList {
+public class ProductList implements DataMap<Integer, Product> {
 
-    public final Map<Integer, Product> productList;
     public static final int LIST_GEN_LENGTH = 100; // количество генерируемых позиций в объекте позиций
+
+    Map<Integer, Product> productList;
+
+    public Map<Integer, Product> get() { return productList; }
+
+    public boolean contains(Integer id) { return !productList.containsKey(id); }
+
+    public Product getValue(Integer id) { return productList.get(id); }
 
 
     public ProductList(String fileName) {
         productList = (fileName == null) ? generator(LIST_GEN_LENGTH) : reader(fileName);
     }
-
-
-    public boolean contains(int id) { return productList.containsKey(id); }
-
-    public Product getValue(int productID) { return productList.get(productID); }
 
 
     // возвращает хэшмап позиций, заполняя его из файла
@@ -81,7 +84,7 @@ public class ProductList {
 
 
     // метод сохранения хэшмапа позиций в файл типа .csv
-    public void saver(Map<Integer, Product> productList, String fileName) {
+    public void save(String fileName) {
 
         try (FileWriter writer = new FileWriter(fileName, false)) {
             for (Map.Entry<Integer, Product> entry : productList.entrySet()) {

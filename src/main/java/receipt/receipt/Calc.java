@@ -1,15 +1,17 @@
 package receipt.receipt;
 
+import receipt.DataMap;
 import receipt.args.Data;
-import receipt.cards.CardList;
 import receipt.products.Position;
 import receipt.products.Product;
-import receipt.products.ProductList;
 import java.util.Map;
 
 public class Calc {
 
-    public static Result result(Data data, ProductList productList, CardList cardList) {
+    public static Result result(
+            Data data,
+            DataMap<Integer, Product> productList,
+            DataMap<String, Integer> cardList) {
 
         Result result = new Result();
         result.discountCardValue = cardList.getValue(data.cardNumber);
