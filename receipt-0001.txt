@@ -4,8 +4,8 @@
          12, MILKY WAY Galaxy/Earth          
               Tel: 123-456-7890              
                                              
-CASHIER: #0001               DATE: 2022-05-24
-                               TIME: 18:38:19
+CASHIER: #0001               DATE: 2022-05-25
+                               TIME: 02:09:58
 ---------------------------------------------
 QTY DESCRIPTION                PRICE    TOTAL
                                              

@@ -17,8 +17,6 @@ public class ProductList implements DataMap<Integer, Product> {
 
     Map<Integer, Product> productList;
 
-    public Map<Integer, Product> get() { return productList; }
-
     public boolean contains(Integer id) { return !productList.containsKey(id); }
 
     public Product getValue(Integer id) { return productList.get(id); }

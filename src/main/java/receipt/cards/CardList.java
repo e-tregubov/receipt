@@ -15,8 +15,6 @@ public class CardList implements DataMap<String, Integer> {
 
     public Map<String, Integer> cardList;
 
-    public Map<String, Integer> get() { return cardList; }
-
     public boolean contains(String cardNumber) { return !cardList.containsKey(cardNumber); }
 
     public Integer getValue(String cardNumber) { return cardList.getOrDefault(cardNumber, 0); }
