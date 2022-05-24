@@ -5,7 +5,7 @@
               Tel: 123-456-7890              
                                              
 CASHIER: #0001               DATE: 2022-05-24
-                               TIME: 18:33:22
+                               TIME: 18:38:19
 ---------------------------------------------
 QTY DESCRIPTION                PRICE    TOTAL
                                              
@@ -17,6 +17,6 @@ QTY DESCRIPTION                PRICE    TOTAL
 3   Curae partiendo           $43,69  $131,07
 ---------------------------------------------
 Amount                               $1824,75
-Card discount: 21%                    $261,50
-TOTAL                                $1563,25
+Card discount: 100%                  $1245,22
+TOTAL                                 $579,53
                                              
