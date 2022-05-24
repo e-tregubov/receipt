@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class Methods {
 
-    final static int TEST_QTY = 256, // количество проходов тестов
+    final static int TEST_QTY = 16384, // количество проходов тестов
                      MAX_POSITIONS = Args.MAX_POSITIONS,
                      MAX_QTY = Args.MAX_QTY,
                      PRODUCT_LIST_LENGTH = ProductList.LIST_GEN_LENGTH,
