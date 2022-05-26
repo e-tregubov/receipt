@@ -20,9 +20,11 @@ public class FormBuilder implements Form {
     static final String EMPTY_LINE = " ".repeat(WIDTH),
                         DASH_LINE = "-".repeat(WIDTH);
 
+
     public FormBuilder(Result result) {
         formLines = linesCalc(result);
     }
+
 
     // возвращает все сформированные строки чека из объекта
     public ArrayList<String> get() { return formLines; }

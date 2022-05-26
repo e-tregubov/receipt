@@ -11,7 +11,7 @@ import java.util.StringJoiner;
 
 public class CardList implements DataMap<String, Integer> {
 
-    public static final int CARD_LIST_LENGTH = 100; // номер первой генерируемой скидкарты, всего их 100 (0-100%)
+    public static final int CARD_LIST_LENGTH = 100;
 
     public Map<String, Integer> cardList;
 
